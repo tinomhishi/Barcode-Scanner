@@ -1,0 +1,48 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Scan</title>
+        <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
+        <link rel="stylesheet" type="text/css" href='{% static "css/new.css" %}'>
+    </head>
+    <body>
+    <div class="container"> 
+        <div class="jumbotron">
+            <div class="jumbo">
+                <h2>Zebra Barcode Reader</h2>   
+                <h3>Camera Scan</h3>
+            </div>    
+        </div>
+        <a href="{% url 'scanner' %}" class="btn btn-default">Upload Instead</a>
+        <hr>
+        <canvas></canvas>
+        <hr>
+        <select class="form-control"></select>
+        <hr>
+
+        <ul></ul>
+    </div>    
+        <script type="text/javascript" src='{% static "js/jquery.js" %}'></script>
+        <script type="text/javascript" src='{% static "js/qrcodelib.js" %}'></script>
+        <script type="text/javascript" src='{% static "js/webcodecamjquery.js" %}'></script>
+        <script type="text/javascript">
+            var arg = {
+                resultFunction: function(result) {
+                    $('body').append($('<li>' + result.format + ': ' + result.code + '</li>'));
+                }
+            };
+            var decoder = $("canvas").WebCodeCamJQuery(arg).data().plugin_WebCodeCamJQuery;
+            decoder.buildSelectMenu("select");
+            decoder.play();
+            /*  Without visible select menu
+                decoder.buildSelectMenu(document.createElement('select'), 'environment|back').init(arg).play();
+            */
+            $('select').on('change', function(){
+                decoder.stop().play();
+            });
+        </script>
+
+    </body>
+</html>
